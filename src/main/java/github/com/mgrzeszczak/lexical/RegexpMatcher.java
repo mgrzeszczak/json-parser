@@ -22,18 +22,17 @@ class RegexpMatcher implements TokenMatcher {
     }
 
     @Override
-    public TokenMatch match(String input) {
+    public Token match(String input) {
         return matchStream(pattern.matcher(input), input)
-                .filter(TokenMatch::isFromStart)
-                .sorted(Comparator.comparingInt(TokenMatch::getLength).reversed())
-                .findFirst()
+                .max(Comparator.comparingInt(Token::getLength))
                 .orElse(null);
     }
 
-    private Stream<TokenMatch> matchStream(Matcher matcher, String input) {
-        List<TokenMatch> matches = new ArrayList<>();
-        while (matcher.find()) {
-            matches.add(new TokenMatch(input.substring(matcher.start(), matcher.end()), matcher.start(), matcher.end(), type));
+    private Stream<Token> matchStream(Matcher matcher, String input) {
+        List<Token> matches = new ArrayList<>();
+        while (matcher.find() && matcher.start() == 0) {
+            int length = matcher.end() - matcher.start();
+            matches.add(Token.of(type, input.substring(0, length)));
         }
         return matches.stream();
     }
