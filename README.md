@@ -1,4 +1,6 @@
 # json-parser
+[![Build Status](https://travis-ci.org/mgrzeszczak/json-parser.png)](https://travis-ci.org/mgrzeszczak/json-parser)
+
 Simple json parser written in Java 8.
 
 # License
