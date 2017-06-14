@@ -1,5 +1,6 @@
 package github.com.mgrzeszczak.lexical;
 
+import github.com.mgrzeszczak.exception.LexicalException;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -84,7 +85,7 @@ public class TokenizerTest {
         ).forEach(TestCase::check);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = LexicalException.class)
     public void testInvalidInput() {
         Stream.of(
                 TestCase.of(

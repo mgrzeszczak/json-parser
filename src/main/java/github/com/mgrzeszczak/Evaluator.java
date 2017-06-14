@@ -14,7 +14,7 @@ public class Evaluator {
             String input = scanner.nextLine();
             try {
                 Tokenizer tokenizer = Tokenizer.of(input);
-                Parser parser = Parser.parse(tokenizer);
+                Parser parser = Parser.of(tokenizer);
                 JsonNode parse = parser.parse();
                 System.out.println(parse.getValue());
             } catch (Exception e) {
