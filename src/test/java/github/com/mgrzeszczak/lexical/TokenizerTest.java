@@ -110,25 +110,25 @@ public class TokenizerTest {
                         Token.of(STRING, "\"abcd\""),
                         Token.of(COLON, ":"),
                         Token.of(OPEN_BRACE, "{"),
-                        Token.of(STRING,"\"list\""),
+                        Token.of(STRING, "\"list\""),
                         Token.of(COLON, ":"),
-                        Token.of(OPEN_BRACKET,"["),
-                        Token.of(NUMBER,"1"),
-                        Token.of(COMMA,","),
-                        Token.of(NUMBER,"2"),
-                        Token.of(COMMA,","),
-                        Token.of(NUMBER,"3"),
-                        Token.of(COMMA,","),
-                        Token.of(NUMBER,"4"),
-                        Token.of(COMMA,","),
-                        Token.of(NUMBER,"5"),
-                        Token.of(COMMA,","),
-                        Token.of(NUMBER,"6"),
-                        Token.of(CLOSE_BRACKET,"]"),
-                        Token.of(COMMA,","),
-                        Token.of(STRING,"\"var\""),
+                        Token.of(OPEN_BRACKET, "["),
+                        Token.of(NUMBER, "1"),
+                        Token.of(COMMA, ","),
+                        Token.of(NUMBER, "2"),
+                        Token.of(COMMA, ","),
+                        Token.of(NUMBER, "3"),
+                        Token.of(COMMA, ","),
+                        Token.of(NUMBER, "4"),
+                        Token.of(COMMA, ","),
+                        Token.of(NUMBER, "5"),
+                        Token.of(COMMA, ","),
+                        Token.of(NUMBER, "6"),
+                        Token.of(CLOSE_BRACKET, "]"),
+                        Token.of(COMMA, ","),
+                        Token.of(STRING, "\"var\""),
                         Token.of(COLON, ":"),
-                        Token.of(NULL,"null"),
+                        Token.of(NULL, "null"),
                         Token.of(CLOSE_BRACE, "}"),
                         Token.of(CLOSE_BRACE, "}")
                 )
@@ -152,9 +152,13 @@ public class TokenizerTest {
 
         void check() {
             Tokenizer tokenizer = Tokenizer.of(input);
-            tokens.forEach(t->assertTrue(tokenizer.next().equals(t)));
+            tokens.forEach(t -> assertTrue(areEqual(t, tokenizer.next())));
             assertTrue(tokenizer.next().equals(Token.EOF));
         }
+    }
+
+    private static boolean areEqual(Token t1, Token t2) {
+        return t1.getType() == t2.getType() && t1.getContent().equals(t2.getContent());
     }
 
 

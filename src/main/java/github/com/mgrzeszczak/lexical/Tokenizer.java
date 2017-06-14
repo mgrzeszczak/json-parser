@@ -1,11 +1,8 @@
 package github.com.mgrzeszczak.lexical;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Stack;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,13 +34,13 @@ public class Tokenizer {
             RegexpMatcher.of(",", COMMA),
             RegexpMatcher.of(":", COLON)
     ).collect(Collectors.toList());
-    private final String input;
-    private Stack<Token> stack;
+
+    private String input;
+    private Token token;
 
     private Tokenizer(String input) {
         this.input = input;
-        this.stack = new Stack<>();
-        this.tokenize();
+        this.token = readToken();
     }
 
     public static Tokenizer of(String input) {
@@ -51,40 +48,41 @@ public class Tokenizer {
     }
 
     public Token peek() {
-        return stack.size() > 0 ? stack.peek() : Token.EOF;
+        return token;
     }
 
     public Token next() {
-        return stack.size() > 0 ? stack.pop() : Token.EOF;
+        Token value = token;
+        token = readToken();
+        return value;
     }
 
-    private void tokenize() {
-        String content = input;
-        List<Token> tokens = new ArrayList<>();
-        while (!content.isEmpty()) {
-            final String text = content;
-            TokenMatch tokenMatch = MATCHERS.stream()
-                    .map(t -> t.match(text))
-                    .filter(Objects::nonNull)
-                    .sorted(Comparator.comparingInt(TokenMatch::getLength).reversed())
-                    .findFirst()
-                    .orElseThrow(() -> reject(text));
-
-
-            if (tokenMatch.getToken().getType() == LITERAL) {
-                throw reject(content);
-            }
-            content = content.substring(tokenMatch.getLength());
-            if (tokenMatch.getToken().getType() == BLANK) continue;
-            tokens.add(tokenMatch.getToken());
+    private Token readToken() {
+        token = nextToken();
+        input = input.substring(token.getLength());
+        if (token.getType() == BLANK) {
+            return readToken();
+        } else if (token.getType() == LITERAL) {
+            throw reject();
+        } else {
+            return token;
         }
-        Collections.reverse(tokens);
-        tokens.forEach(stack::push);
     }
 
-    private static IllegalArgumentException reject(String input) {
-        return new IllegalArgumentException("cannot find tokens for " + input);
+    private Token nextToken() {
+        if (input.isEmpty()) {
+            return Token.EOF;
+        } else {
+            return MATCHERS.stream()
+                    .map(t -> t.match(input))
+                    .filter(Objects::nonNull)
+                    .max(Comparator.comparingInt(Token::getLength))
+                    .orElseThrow(this::reject);
+        }
     }
 
+    private IllegalArgumentException reject() {
+        return new IllegalArgumentException("failed to find token: " + input.substring(0, Math.min(20, input.length())));
+    }
 
 }

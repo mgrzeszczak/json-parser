@@ -1,5 +1,7 @@
 package github.com.mgrzeszczak.lexical;
 
+import static github.com.mgrzeszczak.lexical.TokenType.STRING;
+
 class StringMatcher implements TokenMatcher {
 
     static StringMatcher instance() {
@@ -7,37 +9,22 @@ class StringMatcher implements TokenMatcher {
     }
 
     @Override
-    public TokenMatch match(String input) {
-        try {
-            return findMatch(input);
-        } catch (StringMatchException e) {
+    public Token match(String input) {
+        return findMatch(input);
+    }
+
+    private Token findMatch(String input) {
+        if (input.charAt(0) != '"') {
             return null;
         }
-    }
-
-    private TokenMatch findMatch(String input) throws StringMatchException {
-        int pos = 0;
-        assertChar(input.charAt(pos), '"');
-        while (true) {
-            pos = move(input, ++pos);
-            if (input.charAt(pos - 1) != '\\') {
-                return new TokenMatch(input.substring(0, pos + 1), 0, pos + 1, TokenType.STRING);
+        int offset = 1;
+        int index;
+        while ((index = input.indexOf("\"", offset)) != -1) {
+            if (index == 0 || input.charAt(index - 1) != '\\') {
+                return Token.of(STRING, input.substring(0, index + 1));
             }
+            offset = index + 1;
         }
+        return null;
     }
-
-    private int move(String input, int pos) {
-        while (input.charAt(pos) != '"') {
-            pos++;
-        }
-        return pos;
-    }
-
-    private void assertChar(char actual, char expected) throws StringMatchException {
-        if (actual != expected) throw new StringMatchException();
-    }
-
-    private class StringMatchException extends Exception {
-    }
-
 }
