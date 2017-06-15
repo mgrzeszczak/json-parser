@@ -1,6 +1,6 @@
-package github.com.mgrzeszczak.lexical;
+package github.com.mgrzeszczak.jsonparser;
 
-public class Token {
+class Token {
 
     final static Token EOF = Token.of(TokenType.EOF, "");
 
@@ -16,11 +16,11 @@ public class Token {
         return new Token(type, content);
     }
 
-    public TokenType getType() {
+    TokenType getType() {
         return type;
     }
 
-    public String getContent() {
+    String getContent() {
         return content;
     }
 

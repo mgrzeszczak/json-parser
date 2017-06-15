@@ -1,11 +1,11 @@
-package github.com.mgrzeszczak.json;
+package github.com.mgrzeszczak.jsonparser.json;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class JsonObject implements JsonNode {
+public class JsonObject extends JsonNode {
 
     private Map<String, JsonNode> nodes;
 
@@ -13,16 +13,23 @@ public class JsonObject implements JsonNode {
         this.nodes = nodes;
     }
 
-    public JsonNode getNode(String key) {
-        return nodes.get(key);
+    @Override
+    public boolean isObject() {
+        return true;
     }
 
     @Override
-    public String getValue() {
+    public Map<String, JsonNode> getObject() {
+        return nodes;
+    }
+
+    @Override
+    public String print(JsonPrintType type) {
         List<String> children = new ArrayList<>();
         for (Map.Entry<String, JsonNode> entry : nodes.entrySet()) {
-            children.add("\"" + entry.getKey() + "\"" + " : " + entry.getValue().getValue());
+            children.add("\"" + entry.getKey() + "\"" + " : " + entry.getValue().print(type));
         }
         return "{ " + children.stream().collect(Collectors.joining(", ")) + " }";
     }
+
 }

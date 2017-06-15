@@ -1,6 +1,6 @@
-package github.com.mgrzeszczak.lexical;
+package github.com.mgrzeszczak.jsonparser;
 
-public enum TokenType {
+enum TokenType {
 
     STRING,
     NULL,

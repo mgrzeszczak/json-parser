@@ -1,27 +1,28 @@
-package github.com.mgrzeszczak.structural;
+package github.com.mgrzeszczak.jsonparser;
 
-import github.com.mgrzeszczak.exception.ParseException;
-import github.com.mgrzeszczak.json.JsonArray;
-import github.com.mgrzeszczak.json.JsonNode;
-import github.com.mgrzeszczak.json.JsonObject;
-import github.com.mgrzeszczak.json.JsonValue;
-import github.com.mgrzeszczak.lexical.Token;
-import github.com.mgrzeszczak.lexical.TokenType;
-import github.com.mgrzeszczak.lexical.Tokenizer;
+import github.com.mgrzeszczak.jsonparser.exception.StructuralException;
+import github.com.mgrzeszczak.jsonparser.json.JsonArray;
+import github.com.mgrzeszczak.jsonparser.json.JsonBoolean;
+import github.com.mgrzeszczak.jsonparser.json.JsonDouble;
+import github.com.mgrzeszczak.jsonparser.json.JsonInteger;
+import github.com.mgrzeszczak.jsonparser.json.JsonNode;
+import github.com.mgrzeszczak.jsonparser.json.JsonNull;
+import github.com.mgrzeszczak.jsonparser.json.JsonObject;
+import github.com.mgrzeszczak.jsonparser.json.JsonString;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static github.com.mgrzeszczak.lexical.TokenType.CLOSE_BRACE;
-import static github.com.mgrzeszczak.lexical.TokenType.CLOSE_BRACKET;
-import static github.com.mgrzeszczak.lexical.TokenType.COLON;
-import static github.com.mgrzeszczak.lexical.TokenType.COMMA;
-import static github.com.mgrzeszczak.lexical.TokenType.EOF;
-import static github.com.mgrzeszczak.lexical.TokenType.OPEN_BRACE;
-import static github.com.mgrzeszczak.lexical.TokenType.OPEN_BRACKET;
-import static github.com.mgrzeszczak.lexical.TokenType.STRING;
+import static github.com.mgrzeszczak.jsonparser.TokenType.CLOSE_BRACE;
+import static github.com.mgrzeszczak.jsonparser.TokenType.CLOSE_BRACKET;
+import static github.com.mgrzeszczak.jsonparser.TokenType.COLON;
+import static github.com.mgrzeszczak.jsonparser.TokenType.COMMA;
+import static github.com.mgrzeszczak.jsonparser.TokenType.EOF;
+import static github.com.mgrzeszczak.jsonparser.TokenType.OPEN_BRACE;
+import static github.com.mgrzeszczak.jsonparser.TokenType.OPEN_BRACKET;
+import static github.com.mgrzeszczak.jsonparser.TokenType.STRING;
 
 class BasicParser implements Parser {
 
@@ -90,7 +91,26 @@ class BasicParser implements Parser {
 
     private JsonNode parseValue() {
         Token next = tokenizer.next();
-        return new JsonValue(next.getContent().replace("\"", ""));
+        try {
+            switch (next.getType()) {
+                case NULL:
+                    return new JsonNull();
+                case NUMBER:
+                    try {
+                        return new JsonInteger(Integer.parseInt(next.getContent()));
+                    } catch (NumberFormatException e) {
+                        return new JsonDouble(Double.parseDouble(next.getContent()));
+                    }
+                case STRING:
+                    return new JsonString(next.getContent().substring(1, next.getContent().length() - 1));
+                case BOOLEAN:
+                    return new JsonBoolean(Boolean.valueOf(next.getContent()));
+            }
+        } catch (Exception e) {
+            reject("cannot parse value: " + next.getContent());
+        }
+        reject("logic error");
+        return null;
     }
 
     private void match(TokenType expected) {
@@ -101,7 +121,7 @@ class BasicParser implements Parser {
     }
 
     private void reject(String message) {
-        throw new ParseException(message);
+        throw new StructuralException(message);
     }
 
 }

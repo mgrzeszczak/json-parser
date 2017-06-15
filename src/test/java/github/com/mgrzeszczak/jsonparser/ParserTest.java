@@ -1,8 +1,6 @@
-package github.com.mgrzeszczak.structural;
+package github.com.mgrzeszczak.jsonparser;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class ParserTest {
 
