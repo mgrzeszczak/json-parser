@@ -1,4 +1,4 @@
-package github.com.mgrzeszczak.lexical;
+package github.com.mgrzeszczak.jsonparser;
 
 interface TokenMatcher {
 

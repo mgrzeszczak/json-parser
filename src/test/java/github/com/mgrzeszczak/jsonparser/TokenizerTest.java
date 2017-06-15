@@ -1,22 +1,22 @@
-package github.com.mgrzeszczak.lexical;
+package github.com.mgrzeszczak.jsonparser;
 
-import github.com.mgrzeszczak.exception.LexicalException;
+import github.com.mgrzeszczak.jsonparser.exception.LexicalException;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static github.com.mgrzeszczak.lexical.TokenType.BOOLEAN;
-import static github.com.mgrzeszczak.lexical.TokenType.CLOSE_BRACE;
-import static github.com.mgrzeszczak.lexical.TokenType.CLOSE_BRACKET;
-import static github.com.mgrzeszczak.lexical.TokenType.COLON;
-import static github.com.mgrzeszczak.lexical.TokenType.COMMA;
-import static github.com.mgrzeszczak.lexical.TokenType.NULL;
-import static github.com.mgrzeszczak.lexical.TokenType.NUMBER;
-import static github.com.mgrzeszczak.lexical.TokenType.OPEN_BRACE;
-import static github.com.mgrzeszczak.lexical.TokenType.OPEN_BRACKET;
-import static github.com.mgrzeszczak.lexical.TokenType.STRING;
+import static github.com.mgrzeszczak.jsonparser.TokenType.BOOLEAN;
+import static github.com.mgrzeszczak.jsonparser.TokenType.CLOSE_BRACE;
+import static github.com.mgrzeszczak.jsonparser.TokenType.CLOSE_BRACKET;
+import static github.com.mgrzeszczak.jsonparser.TokenType.COLON;
+import static github.com.mgrzeszczak.jsonparser.TokenType.COMMA;
+import static github.com.mgrzeszczak.jsonparser.TokenType.NULL;
+import static github.com.mgrzeszczak.jsonparser.TokenType.NUMBER;
+import static github.com.mgrzeszczak.jsonparser.TokenType.OPEN_BRACE;
+import static github.com.mgrzeszczak.jsonparser.TokenType.OPEN_BRACKET;
+import static github.com.mgrzeszczak.jsonparser.TokenType.STRING;
 import static org.junit.Assert.assertTrue;
 
 public class TokenizerTest {

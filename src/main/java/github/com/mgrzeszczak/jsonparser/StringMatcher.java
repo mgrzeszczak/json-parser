@@ -1,6 +1,4 @@
-package github.com.mgrzeszczak.lexical;
-
-import static github.com.mgrzeszczak.lexical.TokenType.STRING;
+package github.com.mgrzeszczak.jsonparser;
 
 class StringMatcher implements TokenMatcher {
 
@@ -21,7 +19,7 @@ class StringMatcher implements TokenMatcher {
         int index;
         while ((index = input.indexOf("\"", offset)) != -1) {
             if (index == 0 || input.charAt(index - 1) != '\\') {
-                return Token.of(STRING, input.substring(0, index + 1));
+                return Token.of(TokenType.STRING, input.substring(0, index + 1));
             }
             offset = index + 1;
         }

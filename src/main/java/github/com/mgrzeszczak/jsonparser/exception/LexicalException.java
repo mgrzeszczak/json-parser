@@ -1,4 +1,4 @@
-package github.com.mgrzeszczak.exception;
+package github.com.mgrzeszczak.jsonparser.exception;
 
 public class LexicalException extends RuntimeException {
 
